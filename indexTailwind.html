@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Combo Professionnelle</title>
+    <!-- Intégration de Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Conservation du comportement CSS pour la validation native au focus perdu */
+        input:invalid.touched {
+            border-width: 2px;
+            border-color: #ef4444; /* red-500 */
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800 antialiased p-8 leading-relaxed font-sans">
+
+    <form id="accessForm" novalidate class="max-w-md w-full bg-gray-50 p-5 rounded-lg shadow-md">
+        
+        <div class="mb-4">
+            <label for="nom" class="block mb-1 font-bold text-gray-700">Nom</label>
+            <input type="text" id="nom" required placeholder="Ex: DOVENON" 
+                   class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 box-border">
+            <span class="error-message text-red-500 text-sm min-h-[1.2em] mt-1 block"></span>
+        </div>
+
+        <div class="mb-4">
+            <label for="prenom" class="block mb-1 font-bold text-gray-700">Prénom</label>
+            <input type="text" id="prenom" required placeholder="Ex: Marcepe" 
+                   class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 box-border">
+            <span class="error-message text-red-500 text-sm min-h-[1.2em] mt-1 block"></span>
+        </div>
+
+        <div class="mb-4">
+            <label for="email" class="block mb-1 font-bold text-gray-700">Email</label>
+            <input type="email" id="email" required placeholder="marcepepe@exemple.com" 
+                   class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 box-border">
+            <span class="error-message text-red-500 text-sm min-h-[1.2em] mt-1 block"></span>
+        </div>
+
+        <div class="mb-4">
+            <label for="age" class="block mb-1 font-bold text-gray-700">Âge</label>
+            <input type="number" id="age" required min="1" max="120" placeholder="Ex: 25" 
+                   class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 box-border">
+            <span class="error-message text-red-500 text-sm min-h-[1.2em] mt-1 block"></span>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-5 rounded cursor-pointer text-base transition-colors duration-200">
+            Vérifier l'accès
+        </button>
+    </form>
+
+    <!-- Zone de message final -->
+    <div id="statusDisplay" class="hidden mt-5 p-4 rounded font-bold whitespace-pre-line max-w-md"></div>
+
+    
+  <!-- Script principal en mode module -->
+  <script type="module" src="main.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Validation Combo Professionnelle</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 30px; line-height: 1.6; }
+        form { max-width: 400px; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        .field-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        
+        /* Styles pour les erreurs */
+        input:invalid.touched { border: 2px solid #e74c3c; }
+        .error-message { color: #e74c3c; font-size: 0.85em; min-height: 1.2em; margin-top: 4px; display: block; }
+        
+        /* Style pour le verdict final */
+        #statusDisplay { margin-top: 20px; padding: 15px; border-radius: 4px; display: none; font-weight: bold; white-space: pre-line; }
+        .success-box { display: block !important; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error-box { display: block !important; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; }
+        button:hover { background: #2980b9; }
+    </style>
+</head>
+<body>
+
+    <form id="accessForm" novalidate>
+        <div class="field-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" required placeholder="Ex: DOVENON">
+            <span class="error-message"></span>
+        </div>
+
+        <div class="field-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" required placeholder="Ex: Marcepe">
+            <span class="error-message"></span>
+        </div>
+
+        <div class="field-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required placeholder="marcepepe@exemple.com">
+            <span class="error-message"></span>
+        </div>
+
+        <div class="field-group">
+            <label for="age">Âge</label>
+            <input type="number" id="age" required min="1" max="120" placeholder="Ex: 25">
+            <span class="error-message"></span>
+        </div>
+
+        <button type="submit">Vérifier l'accès</button>
+    </form>
+
+    <!-- Zone de message final -->
+    <div id="statusDisplay"></div>
+
+    <script>
+        const form = document.getElementById("accessForm");
+        const statusDisplay = document.getElementById("statusDisplay");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let isFormValid = true;
+            const inputs = form.querySelectorAll("input");
+
+            inputs.forEach(input => {
+                const errorSpan = input.nextElementSibling;
+                input.classList.add('touched');
+
+                if (!input.checkValidity()) {
+                    errorSpan.textContent = input.validationMessage;
+                    isFormValid = false;
+                } else {
+                    errorSpan.textContent = "";
+                }
+            });
+
+            if (isFormValid) {
+                const payload = {
+                    nom: document.getElementById("nom").value,
+                    prenom: document.getElementById("prenom").value,
+                    email: document.getElementById("email").value,
+                    age: parseInt(document.getElementById("age").value)
+                };
+
+                if (payload.age >= 18) {
+                    statusDisplay.textContent = "✅ Accès autorisé : Vous êtes majeur ! Bienvenue.";
+                    statusDisplay.className = "success-box";
+                } else {
+                    statusDisplay.textContent = "❌ Accès refusé : Vous êtes mineur !";
+                    statusDisplay.className = "error-box";
+                }
+
+                // POST vers un service de test JSONPlaceholder
+                fetch("https://jsonplaceholder.typicode.com/posts", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur HTTP " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    statusDisplay.textContent += "\nRéponse serveur: " + JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    statusDisplay.textContent += "\nErreur POST: " + error.message;
+                });
+
+            } else {
+                statusDisplay.className = "";
+                statusDisplay.textContent = "";
+            }
+        });
+    </script>
+
+</body>
+</html>
